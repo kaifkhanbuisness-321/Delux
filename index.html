@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELUX — The Essence of Luxury | Perfume E-Commerce & WP Implementation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        delux: {
+                            ivory: '#FAF8F5',
+                            cream: '#F4F0EA',
+                            card: '#FCFAF7',
+                            obsidian: '#111111',
+                            charcoal: '#1A1A1A',
+                            gold: '#D4AF37',
+                            goldDark: '#AA820A',
+                            goldLight: '#E8C86B',
+                            champagne: '#C5A059',
+                            champagneLight: '#F3E9D2',
+                            border: 'rgba(212, 175, 55, 0.25)',
+                            borderLight: 'rgba(212, 175, 55, 0.12)'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Playfair Display', 'Georgia', 'serif'],
+                        display: ['"Playfair Display"', 'Cormorant Garamond', 'serif'],
+                        sans: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Custom Glassmorphism & Gold Styling */
+        body {
+            background-color: #FAF8F5;
+            color: #111111;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 20px -2px rgba(212, 175, 55, 0.08);
+        }
+        .gold-border-glow:hover {
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.18);
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A059 0%, #D4AF37 50%, #AA820A 100%);
+            color: #111;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #D4AF37 0%, #E8C86B 50%, #C5A059 100%);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-outline-gold {
+            border: 1px solid #C5A059;
+            color: #111;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-gold:hover {
+            background-color: #111;
+            color: #D4AF37;
+            border-color: #111;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A059;
+            border-radius: 4px;
+        }
+        .modal-overlay {
+            background: rgba(17, 17, 17, 0.75);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col">
+
+    <!-- TOP TOOLBAR: View Switcher between Frontend, Admin, and Code Package -->
+    <div id="top-nav-bar" class="bg-delux-obsidian text-white py-2.5 px-4 text-xs font-sans border-b border-delux-gold/30 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-semibold tracking-wider uppercase text-delux-goldLight">DELUX Enterprise Toolkit</span>
+                <span class="hidden md:inline text-gray-400">| WooCommerce Architecture</span>
+            </div>
+            
+            <div class="flex items-center space-x-1 sm:space-x-2 bg-delux-charcoal p-1 rounded-md border border-delux-gold/20">
+                <button onclick="switchView('store')" id="tab-store" class="px-3 py-1.5 rounded text-xs uppercase tracking-wider font-medium transition-all bg-delux-gold text-delux-obsidian shadow">
+                    <i class="fa-solid fa-store mr-1.5"></i> Live Store Showcase
+                </button>
+                <button onclick="switchView('admin')" id="tab-admin" class="px-3 py-1.5 rounded text-xs uppercase tracking-wider font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-sliders mr-1.5"></i> Admin & Bank Settings
+                </button>
+                <button onclick="switchView('code')" id="tab-code" class="px-3 py-1.5 rounded text-xs uppercase tracking-wider font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-code mr-1.5"></i> WP Source Code Package
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main id="main-content" class="flex-grow">
+        
+        <!-- ========================================== -->
+        <!-- VIEW 1: LIVE STORE FRONTEND SHOWCASE       -->
+        <!-- ========================================== -->
+        <section id="view-store" class="block">
+            
+            <!-- DELUX HEADER -->
+            <header class="bg-delux-ivory border-b border-delux-border sticky top-[45px] z-40 transition-all duration-300">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-20 sm:h-24">
+                        
+                        <!-- Mobile menu button -->
+                        <div class="flex items-center lg:hidden">
+                            <button onclick="toggleMobileNav()" class="text-delux-obsidian hover:text-delux-gold p-2">
+                                <i class="fa-solid fa-bars text-xl"></i>
+                            </button>
+                        </div>
+
+                        <!-- Brand Logo Section -->
+                        <div class="flex-1 lg:flex-none text-center lg:text-left">
+                            <a href="#hero" onclick="filterCategory('All')" class="inline-block group">
+                                <h1 class="font-playfair text-3xl sm:text-4xl tracking-[0.25em] text-delux-obsidian font-bold group-hover:text-delux-gold transition-colors duration-300">
+                                    DELUX
+                                </h1>
+                                <p class="text-[10px] sm:text-xs font-sans tracking-[0.35em] text-delux-champagne uppercase -mt-1 font-light">
+                                    The Essence of Luxury
+                                </p>
+                            </a>
+                        </div>
+
+                        <!-- Main Navigation Links -->
+                        <nav class="hidden lg:flex items-center space-x-8 text-xs font-medium uppercase tracking-[0.2em] text-delux-obsidian">
+                            <a href="#hero" onclick="filterCategory('All')" class="hover:text-delux-gold transition-colors">Home</a>
+                            <a href="#collection" onclick="filterGender('Men')" class="hover:text-delux-gold transition-colors">Men's Collection</a>
+                            <a href="#collection" onclick="filterGender('Women')" class="hover:text-delux-gold transition-colors">Women's Collection</a>
+                            <a href="#categories" class="hover:text-delux-gold transition-colors">Categories</a>
+                            <a href="#about" class="hover:text-delux-gold transition-colors">House of DELUX</a>
+                            <a href="#contact" class="hover:text-delux-gold transition-colors">Contact</a>
+                        </nav>
+
+                        <!-- Right Utility Links -->
+                        <div class="flex items-center space-x-4">
+                            <button onclick="openCart()" class="relative p-2.5 text-delux-obsidian hover:text-delux-gold transition-colors">
+                                <i class="fa-solid fa-bag-shopping text-xl"></i>
+                                <span id="cart-count" class="absolute top-1 right-1 bg-delux-gold text-delux-obsidian text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">0</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation Drawer -->
+                <div id="mobile-nav" class="hidden lg:hidden border-t border-delux-border bg-delux-cream px-4 py-6 space-y-4 text-center">
+                    <a href="#hero" onclick="toggleMobileNav(); filterCategory('All');" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">Home</a>
+                    <a href="#collection" onclick="toggleMobileNav(); filterGender('Men');" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">Men's Collection</a>
+                    <a href="#collection" onclick="toggleMobileNav(); filterGender('Women');" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">Women's Collection</a>
+                    <a href="#categories" onclick="toggleMobileNav();" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">Categories</a>
+                    <a href="#about" onclick="toggleMobileNav();" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">House of DELUX</a>
+                    <a href="#contact" onclick="toggleMobileNav();" class="block text-sm uppercase tracking-widest text-delux-obsidian py-2">Contact</a>
+                </div>
+            </header>
+
+            <!-- HERO SECTION -->
+            <section id="hero" class="relative py-20 lg:py-32 bg-delux-cream overflow-hidden border-b border-delux-border">
+                <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        
+                        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                            <div class="inline-flex items-center space-x-3 px-3 py-1 rounded-full border border-delux-gold/40 bg-white/50 backdrop-blur-sm">
+                                <span class="w-2 h-2 rounded-full bg-delux-gold"></span>
+                                <span class="text-[11px] font-sans uppercase tracking-[0.25em] text-delux-obsidian font-semibold">Parfumerie De Haute Gammé</span>
+                            </div>
+
+                            <h1 class="font-playfair text-4xl sm:text-6xl lg:text-7xl font-light text-delux-obsidian leading-[1.1] tracking-tight">
+                                Crafting Timeless <br>
+                                <span class="italic font-normal font-cormorant gold-gradient-text">Olfactory Masterpieces</span>
+                            </h1>
+
+                            <p class="font-sans text-sm sm:text-base text-gray-700 font-light max-w-xl leading-relaxed mx-auto lg:mx-0">
+                                Step into the realm of DELUX. Hand-extracted rare botanicals, aged pure Royal Oud, and artisanal French perfumery combined to define your distinctive presence.
+                            </p>
+
+                            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                                <a href="#collection" class="btn-gold px-8 py-4 rounded-none text-xs tracking-[0.25em] shadow-lg w-full sm:w-auto text-center">
+                                    Explore Collection
+                                </a>
+                                <a href="#categories" class="btn-outline-gold px-8 py-4 rounded-none text-xs tracking-[0.25em] w-full sm:w-auto text-center">
+                                    Discover Fragrances
+                                </a>
+                            </div>
+
+                            <div class="pt-8 border-t border-delux-gold/20 grid grid-cols-3 gap-4 text-center lg:text-left">
+                                <div>
+                                    <p class="font-playfair text-xl sm:text-2xl font-bold text-delux-obsidian">100%</p>
+                                    <p class="text-[10px] uppercase tracking-wider text-gray-600">Pure Extrait</p>
+                                </div>
+                                <div>
+                                    <p class="font-playfair text-xl sm:text-2xl font-bold text-delux-obsidian">24h+</p>
+                                    <p class="text-[10px] uppercase tracking-wider text-gray-600">Longevity Guarantee</p>
+                                </div>
+                                <div>
+                                    <p class="font-playfair text-xl sm:text-2xl font-bold text-delux-obsidian">Global</p>
+                                    <p class="text-[10px] uppercase tracking-wider text-gray-600">Complimentary Delivery</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hero Graphic / Bottle Presentation -->
+                        <div class="lg:col-span-5 flex justify-center relative">
+                            <div class="relative w-72 h-96 sm:w-80 sm:h-[450px] rounded-t-full bg-gradient-to-b from-white/80 to-delux-ivory border border-delux-gold/40 p-6 flex flex-col items-center justify-center shadow-2xl backdrop-blur-md">
+                                <div class="absolute -inset-1 border border-delux-gold/20 rounded-t-full -m-2 pointer-events-none"></div>
+                                <div class="w-full h-full flex flex-col items-center justify-center relative">
+                                    <!-- Bottle Graphic -->
+                                    <div class="w-24 h-10 border-2 border-delux-gold bg-gradient-to-r from-delux-goldLight via-delux-gold to-delux-goldDark rounded-sm mb-1 shadow-md"></div>
+                                    <div class="w-12 h-6 bg-delux-obsidian mb-2"></div>
+                                    <div class="w-48 h-64 bg-gradient-to-b from-amber-100/90 via-amber-200/50 to-amber-900/30 rounded-2xl border-2 border-delux-gold/60 p-4 flex flex-col items-center justify-between shadow-2xl relative overflow-hidden backdrop-blur-sm">
+                                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/40 via-transparent to-transparent"></div>
+                                        <div class="border border-delux-gold/60 w-full h-full p-3 flex flex-col items-center justify-center text-center bg-white/30 backdrop-blur-xs">
+                                            <span class="font-playfair font-bold tracking-[0.2em] text-delux-obsidian text-lg">DELUX</span>
+                                            <span class="text-[8px] tracking-[0.3em] text-delux-goldDark uppercase">NOIR IMPERIAL</span>
+                                            <span class="text-[7px] text-gray-600 mt-2 tracking-widest">EXTRAIT DE PARFUM</span>
+                                            <span class="text-[7px] text-gray-500 mt-1">100ml e 3.4 fl.oz</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLLECTION SECTION -->
+            <section id="collection" class="py-20 bg-delux-ivory">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+                        <p class="text-xs font-sans uppercase tracking-[0.3em] text-delux-champagne font-semibold">Exquisite Formulations</p>
+                        <h2 class="font-playfair text-3xl sm:text-5xl font-light text-delux-obsidian">Our Perfume Collection</h2>
+                        <div class="w-16 h-0.5 bg-delux-gold mx-auto mt-4"></div>
+                    </div>
+
+                    <!-- Gender Collection Filter Tabs -->
+                    <div class="flex justify-center mb-12 border-b border-delux-border pb-4 space-x-6 sm:space-x-12">
+                        <button onclick="filterGender('All')" id="gender-all" class="text-xs uppercase tracking-[0.2em] font-semibold py-2 border-b-2 border-delux-gold text-delux-obsidian transition-all">
+                            All Perfumes (<span id="count-all">8</span>)
+                        </button>
+                        <button onclick="filterGender('Men')" id="gender-men" class="text-xs uppercase tracking-[0.2em] font-medium py-2 border-b-2 border-transparent text-gray-500 hover:text-delux-obsidian transition-all">
+                            Men's Collection (<span id="count-men">4</span>)
+                        </button>
+                        <button onclick="filterGender('Women')" id="gender-women" class="text-xs uppercase tracking-[0.2em] font-medium py-2 border-b-2 border-transparent text-gray-500 hover:text-delux-obsidian transition-all">
+                            Women's Collection (<span id="count-women">4</span>)
+                        </button>
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Product Cards inserted dynamically via JavaScript -->
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CATEGORIES SECTION -->
+            <section id="categories" class="py-20 bg-delux-cream border-t border-b border-delux-border">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+                        <p class="text-xs font-sans uppercase tracking-[0.3em] text-delux-champagne font-semibold">Olfactory Families</p>
+                        <h2 class="font-playfair text-3xl sm:text-4xl font-light text-delux-obsidian">Explore By Category</h2>
+                        <p class="text-xs text-gray-600 tracking-wider">Click any category to filter the DELUX catalog instantly.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+                        <!-- Dynamic Categories -->
+                        <div onclick="filterCategory('Eau de Parfum')" class="bg-white p-6 border border-delux-border hover:border-delux-gold text-center cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                            <i class="fa-solid fa-bottle-droplet text-2xl text-delux-gold mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h3 class="font-playfair font-semibold text-sm text-delux-obsidian tracking-wider">Eau de Parfum</h3>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">High Concentration</p>
+                        </div>
+                        <div onclick="filterCategory('Eau de Toilette')" class="bg-white p-6 border border-delux-border hover:border-delux-gold text-center cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                            <i class="fa-solid fa-wind text-2xl text-delux-gold mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h3 class="font-playfair font-semibold text-sm text-delux-obsidian tracking-wider">Eau de Toilette</h3>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Light & Fresh</p>
+                        </div>
+                        <div onclick="filterCategory('Oud')" class="bg-white p-6 border border-delux-border hover:border-delux-gold text-center cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                            <i class="fa-solid fa-crown text-2xl text-delux-gold mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h3 class="font-playfair font-semibold text-sm text-delux-obsidian tracking-wider">Oud Royal</h3>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Precious Wood</p>
+                        </div>
+                        <div onclick="filterCategory('Floral')" class="bg-white p-6 border border-delux-border hover:border-delux-gold text-center cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                            <i class="fa-solid fa-spa text-2xl text-delux-gold mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h3 class="font-playfair font-semibold text-sm text-delux-obsidian tracking-wider">Floral Velvet</h3>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Blooming Essence</p>
+                        </div>
+                        <div onclick="filterCategory('Woody')" class="bg-white p-6 border border-delux-border hover:border-delux-gold text-center cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                            <i class="fa-solid fa-tree text-2xl text-delux-gold mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h3 class="font-playfair font-semibold text-sm text-delux-obsidian tracking-wider">Woody & Amber</h3>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Deep Earthy</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOUSE OF DELUX STORY -->
+            <section id="about" class="py-20 bg-delux-ivory border-b border-delux-border">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+                    <p class="text-xs font-sans uppercase tracking-[0.3em] text-delux-champagne font-semibold">Artisanal Craftsmanship</p>
+                    <h2 class="font-playfair text-3xl sm:text-5xl font-light text-delux-obsidian">The House of DELUX</h2>
+                    <p class="text-sm text-gray-700 leading-relaxed max-w-3xl mx-auto font-light">
+                        Founded on the principles of uncompromising luxury and timeless elegance, DELUX creates bespoke fragrances using the rarest raw ingredients gathered from Grasse, Dubai, and Madagascar. Each formulation undergoes a 12-week aging process to achieve unmatched sillage and longevity.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer id="contact" class="bg-delux-obsidian text-white pt-16 pb-12 border-t-2 border-delux-gold">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-800">
+                        <div class="space-y-4">
+                            <h3 class="font-playfair text-2xl tracking-[0.2em] text-delux-gold font-bold">DELUX</h3>
+                            <p class="text-xs text-gray-400 tracking-wider">The Essence of Luxury.</p>
+                            <div class="pt-2 flex space-x-3 text-delux-gold">
+                                <a href="https://wa.me/923152043813" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                                <a href="mailto:kaifkhanbuisness@gmail.com" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope text-lg"></i></a>
+                                <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs uppercase tracking-[0.2em] text-delux-gold font-semibold mb-4">Navigation</h4>
+                            <ul class="space-y-2 text-xs text-gray-400">
+                                <li><a href="#hero" class="hover:text-white transition-colors">Home</a></li>
+                                <li><a href="#collection" class="hover:text-white transition-colors">Men's Perfumes</a></li>
+                                <li><a href="#collection" class="hover:text-white transition-colors">Women's Perfumes</a></li>
+                                <li><a href="#categories" class="hover:text-white transition-colors">Fragrance Families</a></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs uppercase tracking-[0.2em] text-delux-gold font-semibold mb-4">Direct Contact</h4>
+                            <ul class="space-y-2 text-xs text-gray-400">
+                                <li><i class="fa-brands fa-whatsapp mr-2 text-emerald-400"></i> +92 315 2043813</li>
+                                <li><i class="fa-solid fa-envelope mr-2 text-delux-gold"></i> kaifkhanbuisness@gmail.com</li>
+                                <li><i class="fa-solid fa-location-dot mr-2 text-delux-gold"></i> House of DELUX Atelier</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs uppercase tracking-[0.2em] text-delux-gold font-semibold mb-4">Customer Care</h4>
+                            <ul class="space-y-2 text-xs text-gray-400">
+                                <li><a href="#" class="hover:text-white">Shipping & Customs</a></li>
+                                <li><a href="#" class="hover:text-white">Returns & Exchanges</a></li>
+                                <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                                <li><a href="#" class="hover:text-white">Terms & Conditions</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 space-y-4 sm:space-y-0">
+                        <p>&copy; 2026 DELUX Parfums. All Rights Reserved. Built for WooCommerce & WordPress.</p>
+                        <p class="text-delux-gold/80">Crafted for Luxury Connoisseurs</p>
+                    </div>
+                </div>
+            </footer>
+
+            <!-- FLOATING WHATSAPP CTA BUTTON -->
+            <a href="https://wa.me/923152043813" target="_blank" rel="noopener noreferrer" 
+               class="fixed bottom-6 left-6 z-50 bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-300 hover:scale-105 border-2 border-white/20 group">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+                <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap text-xs font-medium tracking-wider pr-1">
+                    Order via WhatsApp
+                </span>
+            </a>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: ADMIN & BANK SETTINGS SIMULATOR    -->
+        <!-- ========================================== -->
+        <section id="view-admin" class="hidden py-10 bg-gray-100 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- WP Admin Bar Simulation Header -->
+                <div class="bg-delux-obsidian text-white p-4 rounded-t-lg flex justify-between items-center border-b border-delux-gold">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-brands fa-wordpress text-2xl text-gray-400"></i>
+                        <div>
+                            <h2 class="font-bold text-sm tracking-wide">WordPress Dashboard &mdash; DELUX Gateway</h2>
+                            <p class="text-[11px] text-gray-400">WooCommerce &gt; Settings &gt; Payments &gt; DELUX Bank Transfer</p>
+                        </div>
+                    </div>
+                    <span class="bg-emerald-900 text-emerald-200 text-xs px-2.5 py-1 rounded font-mono">Plugin Status: Active (v1.0.0)</span>
+                </div>
+
+                <!-- Admin Tabs -->
+                <div class="bg-white border-x border-b border-gray-300 shadow-md p-6 rounded-b-lg">
+                    <div class="flex border-b border-gray-200 mb-6 space-x-4">
+                        <button onclick="switchAdminTab('banks')" id="admin-tab-banks" class="pb-3 border-b-2 border-delux-gold text-delux-obsidian font-semibold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-building-columns mr-1.5"></i> Country & Bank Accounts
+                        </button>
+                        <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="pb-3 border-b-2 border-transparent text-gray-500 font-medium text-xs uppercase tracking-wider hover:text-gray-800">
+                            <i class="fa-solid fa-file-invoice-dollar mr-1.5"></i> WooCommerce Orders & Verification (<span id="admin-order-count">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: Bank & Country Management -->
+                    <div id="admin-sec-banks" class="block space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-50 p-4 rounded-md border border-amber-200 text-xs text-amber-900">
+                            <div>
+                                <strong class="font-bold">Admin Bank Configurator:</strong> Configure payment instructions per country. Customers selecting "Buy Now / Bank Payment" will dynamically see the corresponding IBAN and title.
+                            </div>
+                            <button onclick="openAddBankModal()" class="bg-delux-obsidian hover:bg-black text-delux-gold px-4 py-2 rounded text-xs font-semibold uppercase tracking-wider whitespace-nowrap shadow">
+                                + Add New Country / Bank
+                            </button>
+                        </div>
+
+                        <!-- Active Bank Accounts Table -->
+                        <div class="overflow-x-auto border border-gray-200 rounded-md">
+                            <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                <thead class="bg-gray-50 text-gray-700 font-semibold uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Country</th>
+                                        <th class="px-4 py-3 text-left">Bank Name</th>
+                                        <th class="px-4 py-3 text-left">Account Title</th>
+                                        <th class="px-4 py-3 text-left">Account # / IBAN</th>
+                                        <th class="px-4 py-3 text-left">Status</th>
+                                        <th class="px-4 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-banks-table-body" class="divide-y divide-gray-200 bg-white">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Orders List & Verification -->
+                    <div id="admin-sec-orders" class="hidden space-y-6">
+                        <div class="bg-blue-50 p-4 rounded-md border border-blue-200 text-xs text-blue-900">
+                            <strong class="font-bold">Order Security Protocol:</strong> Orders submitted with Bank Transfer enter <span class="bg-yellow-200 px-1 py-0.5 rounded font-mono font-bold">Payment Pending Verification</span>. Admins must verify bank statement transfers before updating status to <span class="bg-emerald-200 px-1 py-0.5 rounded font-mono font-bold">Payment Verified / Processing</span>.
+                        </div>
+
+                        <div class="overflow-x-auto border border-gray-200 rounded-md">
+                            <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                <thead class="bg-gray-50 text-gray-700 font-semibold uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Order ID</th>
+                                        <th class="px-4 py-3 text-left">Customer</th>
+                                        <th class="px-4 py-3 text-left">Product(s)</th>
+                                        <th class="px-4 py-3 text-left">Amount</th>
+                                        <th class="px-4 py-3 text-left">Method & Reference</th>
+                                        <th class="px-4 py-3 text-left">Status</th>
+                                        <th class="px-4 py-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-orders-table-body" class="divide-y divide-gray-200 bg-white">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: WORDPRESS SOURCE CODE PACKAGE       -->
+        <!-- ========================================== -->
+        <section id="view-code" class="hidden py-10 bg-delux-obsidian min-h-screen text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-delux-gold/30">
+                    <div>
+                        <h2 class="font-playfair text-3xl font-bold text-delux-gold">DELUX WordPress Source Suite</h2>
+                        <p class="text-xs text-gray-400 mt-1">Complete, production-ready PHP plugin & theme implementation code</p>
+                    </div>
+                    <button onclick="copyActiveCode()" class="btn-gold px-5 py-2.5 text-xs rounded shadow">
+                        <i class="fa-regular fa-copy mr-2"></i> Copy Active File Code
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- File Selector Navigation -->
+                    <div class="lg:col-span-3 space-y-2">
+                        <p class="text-[11px] uppercase tracking-widest text-delux-champagne font-semibold mb-3">Plugin Files</p>
+                        <button onclick="showCodeFile('plugin-main')" id="btn-file-plugin-main" class="w-full text-left px-3.5 py-2.5 rounded text-xs font-mono bg-delux-gold text-delux-obsidian font-bold">
+                            delux-bank-payment-gateway.php
+                        </button>
+                        
+                        <p class="text-[11px] uppercase tracking-widest text-delux-champagne font-semibold mt-6 mb-3">Theme Files</p>
+                        <button onclick="showCodeFile('theme-functions')" id="btn-file-theme-functions" class="w-full text-left px-3.5 py-2.5 rounded text-xs font-mono text-gray-300 hover:bg-white/10">
+                            functions.php
+                        </button>
+                        <button onclick="showCodeFile('theme-style')" id="btn-file-theme-style" class="w-full text-left px-3.5 py-2.5 rounded text-xs font-mono text-gray-300 hover:bg-white/10">
+                            style.css (Luxury CSS)
+                        </button>
+                        <button onclick="showCodeFile('sample-data')" id="btn-file-sample-data" class="w-full text-left px-3.5 py-2.5 rounded text-xs font-mono text-gray-300 hover:bg-white/10">
+                            delux-sample-data.php
+                        </button>
+                    </div>
+
+                    <!-- Code Display Box -->
+                    <div class="lg:col-span-9 bg-delux-charcoal border border-delux-gold/30 rounded-lg overflow-hidden shadow-2xl">
+                        <div class="bg-black/60 px-4 py-3 border-b border-delux-gold/20 flex justify-between items-center text-xs text-gray-400">
+                            <span id="code-file-path" class="font-mono text-delux-goldLight">/wp-content/plugins/delux-bank-payment-gateway/delux-bank-payment-gateway.php</span>
+                            <span class="text-[10px] uppercase bg-delux-gold/20 text-delux-gold px-2 py-0.5 rounded">Production Ready</span>
+                        </div>
+                        
+                        <pre class="p-6 text-xs font-mono overflow-x-auto text-emerald-300 max-h-[600px] leading-relaxed"><code id="code-display-area">
+/* Loading code... */
+                        </code></pre>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- MODALS & OVERLAYS                          -->
+    <!-- ========================================== -->
+
+    <!-- MODAL 1: PRODUCT QUICK VIEW MODAL -->
+    <div id="modal-product" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-delux-ivory border-2 border-delux-gold w-full max-w-3xl rounded-none shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col md:flex-row">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 text-delux-obsidian hover:text-delux-gold text-xl p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Product Image Side -->
+            <div class="w-full md:w-1/2 bg-delux-cream p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-delux-border">
+                <div class="w-48 h-64 bg-gradient-to-b from-amber-100 via-amber-200 to-amber-900 rounded-xl border border-delux-gold p-4 flex flex-col items-center justify-center text-center shadow-xl">
+                    <span id="modal-brand" class="font-playfair font-bold text-lg text-delux-obsidian">DELUX</span>
+                    <span id="modal-title-short" class="text-[9px] uppercase tracking-widest text-delux-goldDark font-semibold">NOIR</span>
+                    <span class="text-[8px] text-gray-600 mt-2">EXTRAIT DE PARFUM</span>
+                </div>
+            </div>
+
+            <!-- Product Details Side -->
+            <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between overflow-y-auto space-y-4">
+                <div>
+                    <span id="modal-category" class="text-[10px] font-sans uppercase tracking-[0.25em] text-delux-champagne font-bold">Oud / Men</span>
+                    <h2 id="modal-title" class="font-playfair text-2xl md:text-3xl font-bold text-delux-obsidian mt-1">DELUX Noir</h2>
+                    <p id="modal-price" class="font-playfair text-xl text-delux-goldDark font-semibold mt-2">PKR 28,500</p>
+                    <p id="modal-desc" class="text-xs text-gray-700 mt-3 leading-relaxed">A rich, majestic composition featuring aged Cambodian Oud, rare dark amber, and Damascus rose.</p>
+
+                    <!-- Fragrance Notes Breakdown -->
+                    <div class="mt-4 pt-4 border-t border-delux-border space-y-2">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-delux-obsidian">Fragrance Notes:</p>
+                        <div class="grid grid-cols-3 gap-2 text-[10px]">
+                            <div class="bg-white p-2 border border-delux-border">
+                                <span class="block font-semibold text-delux-champagne">Top</span>
+                                <span id="modal-notes-top" class="text-gray-600">Bergamot, Saffron</span>
+                            </div>
+                            <div class="bg-white p-2 border border-delux-border">
+                                <span class="block font-semibold text-delux-champagne">Heart</span>
+                                <span id="modal-notes-heart" class="text-gray-600">Damascus Rose, Amber</span>
+                            </div>
+                            <div class="bg-white p-2 border border-delux-border">
+                                <span class="block font-semibold text-delux-champagne">Base</span>
+                                <span id="modal-notes-base" class="text-gray-600">Cambodian Oud, Musk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Size Selector -->
+                    <div class="mt-4">
+                        <label class="text-[10px] uppercase tracking-widest font-bold text-delux-obsidian block mb-2">Bottle Size:</label>
+                        <div class="flex space-x-3 text-xs">
+                            <button class="px-3 py-1.5 border border-delux-gold bg-delux-gold/10 font-medium">100 ml Extrait</button>
+                            <button class="px-3 py-1.5 border border-delux-border text-gray-500 hover:border-delux-gold">50 ml Extrait</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-delux-border flex space-x-3">
+                    <button onclick="addToCartFromModal()" class="flex-1 btn-gold py-3 text-xs tracking-wider">
+                        Add To Bag
+                    </button>
+                    <button onclick="buyNowDirect()" class="flex-1 btn-outline-gold py-3 text-xs tracking-wider">
+                        Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL 2: SHOPPING BAG & CHECKOUT MODAL -->
+    <div id="modal-cart" class="fixed inset-0 z-50 modal-overlay hidden flex justify-end">
+        <div class="bg-delux-ivory w-full max-w-md h-full shadow-2xl border-l border-delux-gold flex flex-col justify-between">
+            
+            <div class="p-6 border-b border-delux-border flex justify-between items-center bg-delux-cream">
+                <div>
+                    <h2 class="font-playfair text-xl font-bold text-delux-obsidian tracking-wider">Your Shopping Bag</h2>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest">House of DELUX Parfums</p>
+                </div>
+                <button onclick="closeCart()" class="text-delux-obsidian hover:text-delux-gold p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="p-6 flex-grow overflow-y-auto space-y-4">
+                <!-- Cart items rendered dynamically -->
+            </div>
+
+            <!-- Cart Footer Summary -->
+            <div class="p-6 border-t border-delux-border bg-delux-cream space-y-4">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="font-sans text-xs uppercase tracking-widest text-gray-600">Subtotal</span>
+                    <span id="cart-subtotal" class="font-playfair text-lg font-bold text-delux-obsidian">PKR 0</span>
+                </div>
+                <p class="text-[10px] text-gray-500 italic">Complimentary luxury gift box and global insured delivery included.</p>
+                <button onclick="openCheckoutFlow()" id="btn-proceed-checkout" class="w-full btn-gold py-4 text-xs tracking-[0.2em]">
+                    Proceed To Checkout
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- MODAL 3: CHECKOUT & MULTI-PAYMENT FLOW MODAL -->
+    <div id="modal-checkout" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-delux-ivory border-2 border-delux-gold w-full max-w-2xl rounded-none shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+            
+            <div class="p-5 border-b border-delux-border bg-delux-cream flex justify-between items-center">
+                <div>
+                    <h2 class="font-playfair text-2xl font-bold text-delux-obsidian tracking-wider">DELUX Secure Checkout</h2>
+                    <p class="text-[10px] text-delux-champagne font-bold uppercase tracking-widest">Select Preferred Luxury Payment Gateway</p>
+                </div>
+                <button onclick="closeCheckoutModal()" class="text-delux-obsidian hover:text-delux-gold p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6">
+                
+                <!-- Customer Details Form -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-delux-obsidian border-b border-delux-border pb-1">1. Delivery & Contact Details</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <input type="text" id="cust-name" placeholder="Full Name *" class="p-2.5 border border-delux-border rounded-none focus:border-delux-gold outline-none bg-white">
+                        <input type="email" id="cust-email" placeholder="Email Address *" class="p-2.5 border border-delux-border rounded-none focus:border-delux-gold outline-none bg-white">
+                        <input type="tel" id="cust-phone" placeholder="Phone Number / WhatsApp *" class="p-2.5 border border-delux-border rounded-none focus:border-delux-gold outline-none bg-white">
+                        <input type="text" id="cust-city" placeholder="City *" class="p-2.5 border border-delux-border rounded-none focus:border-delux-gold outline-none bg-white">
+                        <div class="sm:col-span-2">
+                            <input type="text" id="cust-address" placeholder="Full Street Address *" class="w-full p-2.5 border border-delux-border rounded-none focus:border-delux-gold outline-none bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-delux-obsidian border-b border-delux-border pb-1">2. Payment Method Options</h3>
+                    
+                    <div class="grid grid-cols-1 gap-3">
+                        
+                        <!-- OPTION 1: WhatsApp -->
+                        <label onclick="selectPaymentOption('whatsapp')" class="border p-4 flex items-start space-x-3 cursor-pointer bg-white hover:border-delux-gold transition-all">
+                            <input type="radio" name="payment_method" id="pay-whatsapp" value="whatsapp" class="mt-1 text-delux-gold">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-xs uppercase tracking-wider text-delux-obsidian">Option 1 — Order & Pay via WhatsApp</span>
+                                    <i class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
+                                </div>
+                                <p class="text-[11px] text-gray-600 mt-1">Direct concierges: +92 315 2043813. Order pre-formatted automatically.</p>
+                            </div>
+                        </label>
+
+                        <!-- OPTION 2: Email -->
+                        <label onclick="selectPaymentOption('email')" class="border p-4 flex items-start space-x-3 cursor-pointer bg-white hover:border-delux-gold transition-all">
+                            <input type="radio" name="payment_method" id="pay-email" value="email" class="mt-1 text-delux-gold">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-xs uppercase tracking-wider text-delux-obsidian">Option 2 — Order via Email Concierge</span>
+                                    <i class="fa-solid fa-envelope text-delux-gold text-lg"></i>
+                                </div>
+                                <p class="text-[11px] text-gray-600 mt-1">Email: kaifkhanbuisness@gmail.com for instant invoice and order processing.</p>
+                            </div>
+                        </label>
+
+                        <!-- OPTION 3: Buy Now / Dynamic Bank Payment -->
+                        <label onclick="selectPaymentOption('bank')" class="border p-4 flex items-start space-x-3 cursor-pointer bg-white hover:border-delux-gold transition-all border-delux-gold bg-amber-50/30">
+                            <input type="radio" name="payment_method" id="pay-bank" value="bank" checked class="mt-1 text-delux-gold">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-xs uppercase tracking-wider text-delux-obsidian">Option 3 — Buy Now / Direct Bank Wire Transfer</span>
+                                    <i class="fa-solid fa-building-columns text-delux-obsidian text-lg"></i>
+                                </div>
+                                <p class="text-[11px] text-gray-600 mt-1">Dynamic Country & Bank selector with account details and reference submission.</p>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+
+                <!-- DYNAMIC BANK PAYMENT DETAILS BOX (Shown when Option 3 is active) -->
+                <div id="bank-payment-details-box" class="p-4 bg-white border border-delux-gold/40 rounded-none space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block font-bold uppercase text-[10px] text-gray-700 mb-1">Select Destination Country:</label>
+                            <select id="checkout-country-select" onchange="onCheckoutCountryChange()" class="w-full p-2 border border-delux-border bg-delux-ivory outline-none font-medium">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold uppercase text-[10px] text-gray-700 mb-1">Select Available Bank:</label>
+                            <select id="checkout-bank-select" onchange="onCheckoutBankChange()" class="w-full p-2 border border-delux-border bg-delux-ivory outline-none font-medium">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Selected Bank Display Info -->
+                    <div id="selected-bank-info" class="bg-delux-cream p-3 border border-delux-gold/30 text-xs space-y-1">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+
+                    <!-- Payment Reference Input -->
+                    <div>
+                        <label class="block font-bold uppercase text-[10px] text-delux-obsidian mb-1">Transaction / Reference Number or Payment Slip ID:</label>
+                        <input type="text" id="cust-bank-ref" placeholder="e.g., TRX-982341209 or Bank Transfer Reference *" class="w-full p-2.5 border border-delux-border bg-white text-xs outline-none">
+                        <p class="text-[9px] text-gray-500 mt-1">Verification Note: Your order status will be placed on <span class="font-bold text-amber-800">Pending Verification</span> until reviewed by our finance team.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="p-5 border-t border-delux-border bg-delux-cream flex justify-between items-center">
+                <div class="text-xs">
+                    <span class="text-gray-500">Total Payable:</span>
+                    <span id="checkout-total-price" class="font-playfair text-xl font-bold text-delux-obsidian ml-2">PKR 0</span>
+                </div>
+                <button onclick="submitOrderFinal()" class="btn-gold px-8 py-3.5 text-xs tracking-[0.2em]">
+                    Confirm Order
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- MODAL 4: ORDER CONFIRMATION SCREEN -->
+    <div id="modal-confirmation" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-delux-ivory border-2 border-delux-gold w-full max-w-lg rounded-none shadow-2xl p-8 text-center space-y-6 relative">
+            
+            <div class="w-16 h-16 bg-delux-gold/20 text-delux-gold rounded-full flex items-center justify-center mx-auto border border-delux-gold">
+                <i class="fa-solid fa-check text-2xl"></i>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-sans uppercase tracking-[0.3em] text-delux-champagne font-bold">House of DELUX Parfums</p>
+                <h2 class="font-playfair text-3xl font-bold text-delux-obsidian mt-1">Order Received</h2>
+                <p class="text-xs text-gray-600 mt-2">Thank you for choosing DELUX. Your perfume order has been placed successfully.</p>
+            </div>
+
+            <!-- Order Breakdown Box -->
+            <div class="bg-white p-4 border border-delux-border text-left text-xs space-y-2 font-sans">
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Order ID:</span>
+                    <span id="conf-order-id" class="font-mono font-bold text-delux-obsidian">#DLX-9821</span>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Customer:</span>
+                    <span id="conf-cust-name" class="font-semibold text-delux-obsidian">Kaif Khan</span>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Payment Gateway:</span>
+                    <span id="conf-pay-method" class="font-semibold text-delux-goldDark">Bank Wire Transfer</span>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Verification Status:</span>
+                    <span id="conf-status" class="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-0.5 font-semibold rounded">Pending Verification</span>
+                </div>
+                <div class="flex justify-between pt-1">
+                    <span class="font-bold text-delux-obsidian">Total Amount:</span>
+                    <span id="conf-total" class="font-playfair font-bold text-lg text-delux-obsidian">PKR 28,500</span>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 p-3 border border-amber-200 text-[11px] text-amber-900 text-left">
+                <i class="fa-solid fa-shield-halved mr-1 text-delux-gold"></i>
+                <strong>Security Notice:</strong> The administrator will manually verify your payment reference in the WordPress dashboard before dispatching your perfume.
+            </div>
+
+            <button onclick="closeConfirmationAndReset()" class="w-full btn-gold py-3 text-xs tracking-widest">
+                Return To Atelier
+            </button>
+        </div>
+    </div>
+
+
+    <!-- MODAL 5: ADMIN ADD BANK MODAL -->
+    <div id="modal-admin-add-bank" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-white border-2 border-delux-obsidian w-full max-w-md rounded-none shadow-2xl p-6 space-y-4">
+            <h3 class="font-bold text-sm uppercase tracking-wider text-delux-obsidian border-b pb-2">Add New Bank Account Details</h3>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Country Name:</label>
+                    <input type="text" id="admin-input-country" placeholder="e.g., Pakistan, UAE, United Kingdom" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Bank Name:</label>
+                    <input type="text" id="admin-input-bank" placeholder="e.g., Meezan Bank / Emirates NBD" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Account Title / Holder Name:</label>
+                    <input type="text" id="admin-input-title" placeholder="e.g., DELUX Parfums PVT LTD" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Account Number / IBAN:</label>
+                    <input type="text" id="admin-input-iban" placeholder="e.g., PK92MEZN0001029384812" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Payment Instructions:</label>
+                    <textarea id="admin-input-instructions" placeholder="e.g., Please mention Order ID in transfer description." class="w-full p-2 border rounded h-16"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="closeAddBankModal()" class="px-4 py-2 border text-xs font-semibold">Cancel</button>
+                <button onclick="saveAdminBank()" class="bg-delux-obsidian text-delux-gold px-4 py-2 text-xs font-semibold uppercase">Save Account</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* -------------------------------------------------------------
+           1. DATA MODELS & STATE
+        ------------------------------------------------------------- */
+        const PRODUCTS = [
+            {
+                id: 1,
+                name: "DELUX Noir",
+                gender: "Men",
+                category: "Oud",
+                pricePKR: 28500,
+                priceUSD: 105,
+                desc: "A rich, majestic composition featuring aged Cambodian Oud, rare dark amber, and Damascus rose.",
+                notesTop: "Bergamot, Saffron",
+                notesHeart: "Damascus Rose, Amber",
+                notesBase: "Cambodian Oud, Musk",
+                badge: "Best Seller"
+            },
+            {
+                id: 2,
+                name: "DELUX Oud Royal",
+                gender: "Men",
+                category: "Oud",
+                pricePKR: 34000,
+                priceUSD: 125,
+                desc: "Intense, smoky regal fragrance crafted with 25-year-old matured Assam Oud oil.",
+                notesTop: "Cardamom, Nutmeg",
+                notesHeart: "Smoky Leather, Patchouli",
+                notesBase: "Royal Assam Oud, Sandalwood",
+                badge: "Royal Edition"
+            },
+            {
+                id: 3,
+                name: "DELUX Amber Intense",
+                gender: "Men",
+                category: "Woody",
+                pricePKR: 24500,
+                priceUSD: 90,
+                desc: "Warm Baltic amber blended with roasted tonka bean and spiced cedarwood.",
+                notesTop: "Pink Pepper, Cinnamon",
+                notesHeart: "Baltic Amber, Labdanum",
+                notesBase: "Cedarwood, Madagascar Vanilla",
+                badge: "Signature"
+            },
+            {
+                id: 4,
+                name: "DELUX Imperial",
+                gender: "Men",
+                category: "Eau de Parfum",
+                pricePKR: 26000,
+                priceUSD: 95,
+                desc: "Fresh Mediterranean citrus opening into an elegant dry-down of vetiver and crisp oakmoss.",
+                notesTop: "Calabrian Bergamot, Lemon",
+                notesHeart: "French Lavender, Vetiver",
+                notesBase: "Oakmoss, Ambergris",
+                badge: "Classic"
+            },
+            {
+                id: 5,
+                name: "DELUX Élégance",
+                gender: "Women",
+                category: "Floral",
+                pricePKR: 29000,
+                priceUSD: 108,
+                desc: "An enchanting bouquet of rare white jasmine, Bulgarian rose, and powdery iris root.",
+                notesTop: "White Peach, Pear",
+                notesHeart: "Grasse Jasmine, Rose De Mai",
+                notesBase: "Florentine Iris, White Musk",
+                badge: "Top Rated"
+            },
+            {
+                id: 6,
+                name: "DELUX Rose Velvet",
+                gender: "Women",
+                category: "Floral",
+                pricePKR: 27500,
+                priceUSD: 100,
+                desc: "Velvety damask rose petals laced with sweet raspberries and creamy Cashmere wood.",
+                notesTop: "Lychee, Raspberry",
+                notesHeart: "Damask Rose, Peony",
+                notesBase: "Cashmere Wood, Vanilla",
+                badge: "Sensual"
+            },
+            {
+                id: 7,
+                name: "DELUX Bloom Supreme",
+                gender: "Women",
+                category: "Fresh",
+                pricePKR: 23000,
+                priceUSD: 85,
+                desc: "A luminous, sparkling elixir inspired by morning dew over royal Mediterranean gardens.",
+                notesTop: "Mandarin, Green Apple",
+                notesHeart: "Orange Blossom, Lily of Valley",
+                notesBase: "White Cedar, Soft Amber",
+                badge: "New Arrival"
+            },
+            {
+                id: 8,
+                name: "DELUX Silk Nectar",
+                gender: "Women",
+                category: "Eau de Parfum",
+                pricePKR: 31000,
+                priceUSD: 115,
+                desc: "Opulent honeyed nectar combined with rare orchids and warm golden amber.",
+                notesTop: "Golden Nectar, Apricot",
+                notesHeart: "Black Orchid, Ylang-Ylang",
+                notesBase: "Sandalwood, Honey Accord",
+                badge: "Limited"
+            }
+        ];
+
+        let bankAccounts = [
+            { id: 1, country: "Pakistan", bank: "Meezan Bank Limited", title: "DELUX PARFUMS PVT LTD", iban: "PK92MEZN0001029384812", status: "Active", instructions: "Include your Order Reference in bank app comments." },
+            { id: 2, country: "Pakistan", bank: "Bank Alfalah", title: "DELUX PARFUMS PVT LTD", iban: "PK04ALFH0098231029384", status: "Active", instructions: "Transfer proof can be sent via WhatsApp after order." },
+            { id: 3, country: "United Arab Emirates", bank: "Emirates NBD", title: "DELUX TRADING FZE", iban: "AE4802600001234567890", status: "Active", instructions: "AED transfers processed same business day." },
+            { id: 4, country: "United Kingdom", bank: "Barclays Bank", title: "DELUX LUXURY UK LTD", iban: "GB29BARC20201530981234", status: "Active", instructions: "Faster Payments enabled." }
+        ];
+
+        let ordersList = [
+            { id: "DLX-9012", customer: "Ahmad Raza", items: "DELUX Noir (1)", total: "PKR 28,500", method: "Bank Wire (Meezan)", reference: "TRX-882310", status: "Pending Verification" }
+        ];
+
+        let cart = [];
+        let currentModalProduct = null;
+        let selectedGenderFilter = "All";
+        let selectedCategoryFilter = "All";
+
+        /* -------------------------------------------------------------
+           2. VIEW SWITCHER LOGIC
+        ------------------------------------------------------------- */
+        function switchView(viewName) {
+            document.getElementById('view-store').style.display = viewName === 'store' ? 'block' : 'none';
+            document.getElementById('view-admin').style.display = viewName === 'admin' ? 'block' : 'none';
+            document.getElementById('view-code').style.display = viewName === 'code' ? 'block' : 'none';
+
+            // Reset tab styles
+            ['store', 'admin', 'code'].forEach(tab => {
+                const btn = document.getElementById(`tab-${tab}`);
+                if (tab === viewName) {
+                    btn.className = "px-3 py-1.5 rounded text-xs uppercase tracking-wider font-medium bg-delux-gold text-delux-obsidian shadow";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded text-xs uppercase tracking-wider font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all";
+                }
+            });
+
+            if (viewName === 'code') {
+                showCodeFile('plugin-main');
+            }
+        }
+
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            nav.classList.toggle('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           3. PRODUCTS RENDER & FILTERING
+        ------------------------------------------------------------- */
+        function renderProducts() {
+            const container = document.getElementById('products-grid');
+            container.innerHTML = '';
+
+            const filtered = PRODUCTS.filter(p => {
+                const matchGender = selectedGenderFilter === "All" || p.gender === selectedGenderFilter;
+                const matchCategory = selectedCategoryFilter === "All" || p.category === selectedCategoryFilter;
+                return matchGender && matchCategory;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 font-sans text-xs">No perfumes match the selected criteria. <button onclick="filterCategory('All')" class="underline text-delux-gold">Reset Filters</button></div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-delux-card border border-delux-border hover:border-delux-gold p-6 flex flex-col justify-between transition-all duration-300 gold-border-glow group relative";
+                
+                card.innerHTML = `
+                    <div class="absolute top-4 right-4 bg-delux-obsidian text-delux-gold text-[9px] uppercase tracking-widest px-2 py-0.5 font-semibold">
+                        ${p.badge}
+                    </div>
+
+                    <!-- Bottle Visual Area -->
+                    <div class="h-48 flex items-center justify-center my-4 cursor-pointer" onclick="openProductModal(${p.id})">
+                        <div class="w-32 h-40 bg-gradient-to-b from-amber-50 via-amber-100 to-amber-800 rounded-lg border border-delux-gold/50 p-3 flex flex-col items-center justify-center text-center shadow-md group-hover:scale-105 transition-transform duration-500">
+                            <span class="font-playfair font-bold text-xs text-delux-obsidian">DELUX</span>
+                            <span class="text-[8px] uppercase tracking-widest text-delux-goldDark mt-1 font-semibold">${p.name.replace('DELUX ', '')}</span>
+                            <span class="text-[7px] text-gray-500 mt-2">EXTRAIT</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <span class="text-[9px] font-sans uppercase tracking-[0.2em] text-delux-champagne font-bold">${p.category} &bull; ${p.gender}</span>
+                        <h3 class="font-playfair text-xl font-bold text-delux-obsidian group-hover:text-delux-gold transition-colors">${p.name}</h3>
+                        <p class="text-xs text-gray-600 line-clamp-2">${p.desc}</p>
+                        <p class="font-playfair text-lg font-bold text-delux-goldDark pt-2">PKR ${p.pricePKR.toLocaleString()}</p>
+                    </div>
+
+                    <div class="pt-4 mt-4 border-t border-delux-border flex space-x-2">
+                        <button onclick="openProductModal(${p.id})" class="flex-1 btn-outline-gold py-2 text-[10px] tracking-widest">
+                            View Perfume
+                        </button>
+                        <button onclick="addToCartDirect(${p.id})" class="btn-gold px-3 py-2 text-[10px]">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGender(gender) {
+            selectedGenderFilter = gender;
+            ['all', 'men', 'women'].forEach(g => {
+                const btn = document.getElementById(`gender-${g}`);
+                if (g === gender.toLowerCase()) {
+                    btn.className = "text-xs uppercase tracking-[0.2em] font-semibold py-2 border-b-2 border-delux-gold text-delux-obsidian transition-all";
+                } else {
+                    btn.className = "text-xs uppercase tracking-[0.2em] font-medium py-2 border-b-2 border-transparent text-gray-500 hover:text-delux-obsidian transition-all";
+                }
+            });
+            renderProducts();
+        }
+
+        function filterCategory(cat) {
+            selectedCategoryFilter = cat;
+            renderProducts();
+            document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* -------------------------------------------------------------
+           4. PRODUCT MODAL & CART SYSTEM
+        ------------------------------------------------------------- */
+        function openProductModal(productId) {
+            const p = PRODUCTS.find(item => item.id === productId);
+            if (!p) return;
+            currentModalProduct = p;
+
+            document.getElementById('modal-title').innerText = p.name;
+            document.getElementById('modal-title-short').innerText = p.name.replace('DELUX ', '');
+            document.getElementById('modal-category').innerText = `${p.category} / ${p.gender}`;
+            document.getElementById('modal-price').innerText = `PKR ${p.pricePKR.toLocaleString()}`;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-notes-top').innerText = p.notesTop;
+            document.getElementById('modal-notes-heart').innerText = p.notesHeart;
+            document.getElementById('modal-notes-base').innerText = p.notesBase;
+
+            document.getElementById('modal-product').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('modal-product').classList.add('hidden');
+        }
+
+        function addToCartDirect(productId) {
+            const p = PRODUCTS.find(item => item.id === productId);
+            if (!p) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            updateCartUI();
+            openCart();
+        }
+
+        function addToCartFromModal() {
+            if (currentModalProduct) {
+                addToCartDirect(currentModalProduct.id);
+                closeProductModal();
+            }
+        }
+
+        function buyNowDirect() {
+            if (currentModalProduct) {
+                cart = [{ ...currentModalProduct, qty: 1 }];
+                updateCartUI();
+                closeProductModal();
+                openCheckoutFlow();
+            }
+        }
+
+        function updateCartUI() {
+            const countElem = document.getElementById('cart-count');
+            const container = document.getElementById('cart-items-container');
+            const subtotalElem = document.getElementById('cart-subtotal');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.pricePKR * item.qty), 0);
+
+            countElem.innerText = totalItems;
+            subtotalElem.innerText = `PKR ${subtotal.toLocaleString()}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-12">Your shopping bag is empty.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            cart.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-3 bg-white border border-delux-border text-xs";
+                row.innerHTML = `
+                    <div>
+                        <h4 class="font-playfair font-bold text-sm text-delux-obsidian">${item.name}</h4>
+                        <p class="text-[10px] text-gray-500">100ml Extrait &bull; PKR ${item.pricePKR.toLocaleString()}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-delux-obsidian">x${item.qty}</span>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 ml-2">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function openCart() {
+            document.getElementById('modal-cart').classList.remove('hidden');
+        }
+
+        function closeCart() {
+            document.getElementById('modal-cart').classList.add('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           5. CHECKOUT & DYNAMIC BANK PAYMENT FLOW
+        ------------------------------------------------------------- */
+        let selectedPaymentMethod = "bank";
+
+        function openCheckoutFlow() {
+            if (cart.length === 0) return;
+            closeCart();
+
+            const total = cart.reduce((sum, item) => sum + (item.pricePKR * item.qty), 0);
+            document.getElementById('checkout-total-price').innerText = `PKR ${total.toLocaleString()}`;
+
+            populateCheckoutCountryDropdown();
+            document.getElementById('modal-checkout').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('modal-checkout').classList.add('hidden');
+        }
+
+        function selectPaymentOption(method) {
+            selectedPaymentMethod = method;
+            document.getElementById('pay-whatsapp').checked = method === 'whatsapp';
+            document.getElementById('pay-email').checked = method === 'email';
+            document.getElementById('pay-bank').checked = method === 'bank';
+
+            const bankBox = document.getElementById('bank-payment-details-box');
+            bankBox.style.display = method === 'bank' ? 'block' : 'none';
+        }
+
+        function populateCheckoutCountryDropdown() {
+            const countrySelect = document.getElementById('checkout-country-select');
+            const countries = [...new Set(bankAccounts.map(b => b.country))];
+            
+            countrySelect.innerHTML = '';
+            countries.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.innerText = c;
+                countrySelect.appendChild(opt);
+            });
+
+            onCheckoutCountryChange();
+        }
+
+        function onCheckoutCountryChange() {
+            const countrySelect = document.getElementById('checkout-country-select');
+            const bankSelect = document.getElementById('checkout-bank-select');
+            const selectedCountry = countrySelect.value;
+
+            const countryBanks = bankAccounts.filter(b => b.country === selectedCountry && b.status === "Active");
+            bankSelect.innerHTML = '';
+
+            countryBanks.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.bank;
+                bankSelect.appendChild(opt);
+            });
+
+            onCheckoutBankChange();
+        }
+
+        function onCheckoutBankChange() {
+            const bankSelect = document.getElementById('checkout-bank-select');
+            const infoBox = document.getElementById('selected-bank-info');
+            const selectedBankId = parseInt(bankSelect.value);
+
+            const bankObj = bankAccounts.find(b => b.id === selectedBankId);
+            if (!bankObj) {
+                infoBox.innerHTML = `<p class="text-gray-500">No bank selected.</p>`;
+                return;
+            }
+
+            infoBox.innerHTML = `
+                <p><strong>Bank Name:</strong> ${bankObj.bank}</p>
+                <p><strong>Account Title:</strong> ${bankObj.title}</p>
+                <p><strong>IBAN / Account #:</strong> <span class="font-mono font-bold text-delux-goldDark">${bankObj.iban}</span></p>
+                <p class="text-[10px] text-gray-600 mt-1"><strong>Instructions:</strong> ${bankObj.instructions}</p>
+            `;
+        }
+
+        function submitOrderFinal() {
+            const name = document.getElementById('cust-name').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            
+            if (!name || !email || !phone) {
+                alert('Please fill in your Name, Email, and Phone Number before proceeding.');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.pricePKR * item.qty), 0);
+            const productNames = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+
+            // HANDLE METHOD 1: WHATSAPP DIRECT REDIRECT
+            if (selectedPaymentMethod === 'whatsapp') {
+                const msg = `Hello DELUX, I would like to order: ${productNames}. Total: PKR ${total.toLocaleString()}. My Name: ${name}, Phone: ${phone}.`;
+                window.open(`https://wa.me/923152043813?text=${encodeURIComponent(msg)}`, '_blank');
+                closeCheckoutModal();
+                return;
+            }
+
+            // HANDLE METHOD 2: EMAIL REDIRECT
+            if (selectedPaymentMethod === 'email') {
+                const subject = `DELUX Perfume Order - ${name}`;
+                const body = `Hello DELUX Team,\n\nI wish to order: ${productNames}\nTotal Amount: PKR ${total.toLocaleString()}\n\nCustomer Details:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+                window.location.href = `mailto:kaifkhanbuisness@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                closeCheckoutModal();
+                return;
+            }
+
+            // HANDLE METHOD 3: BANK PAYMENT WITH REFERENCE
+            const bankRef = document.getElementById('cust-bank-ref').value.trim();
+            if (!bankRef) {
+                alert('Please enter your Bank Wire Transaction / Reference Number to confirm the transfer submission.');
+                return;
+            }
+
+            const orderId = `DLX-${Math.floor(1000 + Math.random() * 9000)}`;
+            const newOrder = {
+                id: orderId,
+                customer: name,
+                items: productNames,
+                total: `PKR ${total.toLocaleString()}`,
+                method: "Bank Wire Transfer",
+                reference: bankRef,
+                status: "Pending Verification"
+            };
+
+            ordersList.unshift(newOrder);
+            updateAdminOrdersTable();
+
+            // Render Confirmation Modal
+            document.getElementById('conf-order-id').innerText = `#${orderId}`;
+            document.getElementById('conf-cust-name').innerText = name;
+            document.getElementById('conf-pay-method').innerText = "Bank Wire Transfer";
+            document.getElementById('conf-status').innerText = "Pending Verification";
+            document.getElementById('conf-total').innerText = `PKR ${total.toLocaleString()}`;
+
+            closeCheckoutModal();
+            document.getElementById('modal-confirmation').classList.remove('hidden');
+        }
+
+        function closeConfirmationAndReset() {
+            cart = [];
+            updateCartUI();
+            document.getElementById('modal-confirmation').classList.add('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           6. ADMIN SIMULATOR LOGIC
+        ------------------------------------------------------------- */
+        function switchAdminTab(tabName) {
+            document.getElementById('admin-sec-banks').style.display = tabName === 'banks' ? 'block' : 'none';
+            document.getElementById('admin-sec-orders').style.display = tabName === 'orders' ? 'block' : 'none';
+
+            document.getElementById('admin-tab-banks').className = tabName === 'banks' 
+                ? "pb-3 border-b-2 border-delux-gold text-delux-obsidian font-semibold text-xs uppercase tracking-wider"
+                : "pb-3 border-b-2 border-transparent text-gray-500 font-medium text-xs uppercase tracking-wider hover:text-gray-800";
+
+            document.getElementById('admin-tab-orders').className = tabName === 'orders' 
+                ? "pb-3 border-b-2 border-delux-gold text-delux-obsidian font-semibold text-xs uppercase tracking-wider"
+                : "pb-3 border-b-2 border-transparent text-gray-500 font-medium text-xs uppercase tracking-wider hover:text-gray-800";
+        }
+
+        function renderAdminBanksTable() {
+            const tbody = document.getElementById('admin-banks-table-body');
+            tbody.innerHTML = '';
+
+            bankAccounts.forEach(b => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-medium text-gray-900">${b.country}</td>
+                    <td class="px-4 py-3 font-semibold text-delux-obsidian">${b.bank}</td>
+                    <td class="px-4 py-3 text-gray-600">${b.title}</td>
+                    <td class="px-4 py-3 font-mono text-delux-goldDark">${b.iban}</td>
+                    <td class="px-4 py-3"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold">${b.status}</span></td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="deleteAdminBank(${b.id})" class="text-red-600 hover:text-red-800 font-semibold text-[11px]">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateAdminOrdersTable() {
+            const tbody = document.getElementById('admin-orders-table-body');
+            const countElem = document.getElementById('admin-order-count');
+            countElem.innerText = ordersList.length;
+
+            tbody.innerHTML = '';
+            ordersList.forEach((o, index) => {
+                const isVerified = o.status === "Payment Verified / Processing";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-mono font-bold text-delux-obsidian">#${o.id}</td>
+                    <td class="px-4 py-3 font-medium">${o.customer}</td>
+                    <td class="px-4 py-3 text-gray-600">${o.items}</td>
+                    <td class="px-4 py-3 font-semibold">${o.total}</td>
+                    <td class="px-4 py-3 text-xs">
+                        <span class="block font-semibold">${o.method}</span>
+                        <span class="font-mono text-gray-500 text-[10px]">Ref: ${o.reference}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="${isVerified ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'} text-[10px] px-2 py-0.5 rounded font-bold">
+                            ${o.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="toggleOrderStatus(${index})" class="bg-delux-obsidian text-delux-gold px-2.5 py-1 rounded text-[10px] uppercase font-bold hover:bg-black">
+                            ${isVerified ? 'Mark Pending' : 'Verify Payment'}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleOrderStatus(index) {
+            if (ordersList[index]) {
+                ordersList[index].status = ordersList[index].status === "Pending Verification" 
+                    ? "Payment Verified / Processing" 
+                    : "Pending Verification";
+                updateAdminOrdersTable();
+            }
+        }
+
+        function openAddBankModal() {
+            document.getElementById('modal-admin-add-bank').classList.remove('hidden');
+        }
+
+        function closeAddBankModal() {
+            document.getElementById('modal-admin-add-bank').classList.add('hidden');
+        }
+
+        function saveAdminBank() {
+            const country = document.getElementById('admin-input-country').value.trim();
+            const bank = document.getElementById('admin-input-bank').value.trim();
+            const title = document.getElementById('admin-input-title').value.trim();
+            const iban = document.getElementById('admin-input-iban').value.trim();
+            const instructions = document.getElementById('admin-input-instructions').value.trim();
+
+            if (!country || !bank || !iban) {
+                alert('Please enter Country, Bank Name, and IBAN.');
+                return;
+            }
+
+            bankAccounts.push({
+                id: Date.now(),
+                country,
+                bank,
+                title: title || "DELUX PARFUMS",
+                iban,
+                status: "Active",
+                instructions: instructions || "Transfer reference required."
+            });
+
+            renderAdminBanksTable();
+            closeAddBankModal();
+        }
+
+        function deleteAdminBank(id) {
+            bankAccounts = bankAccounts.filter(b => b.id !== id);
+            renderAdminBanksTable();
+        }
+
+        /* -------------------------------------------------------------
+           7. CODE PACKAGE SUITE DISPLAY & GENERATOR
+        ------------------------------------------------------------- */
+        const CODE_FILES = {
+            'plugin-main': {
+                path: '/wp-content/plugins/delux-bank-payment-gateway/delux-bank-payment-gateway.php',
+                code: `<?php
+/**
+ * Plugin Name: DELUX Luxury Bank Payment Gateway
+ * Plugin URI: https://deluxparfums.com
+ * Description: Custom WooCommerce payment gateway supporting country-based dynamic bank transfers, transaction reference capture, and admin verification workflow.
+ * Version: 1.0.0
+ * Author: House of DELUX
+ * Text Domain: delux-gateway
+ */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+// Initialize Gateway Class after Plugins Loaded
+add_action('plugins_loaded', 'delux_init_bank_gateway_class');
+
+function delux_init_bank_gateway_class() {
+    if (!class_exists('WC_Payment_Gateway')) return;
+
+    class WC_Gateway_Delux_Bank extends WC_Payment_Gateway {
+
+        public function __construct() {
+            $this->id                 = 'delux_bank';
+            $this->icon               = apply_filters('woocommerce_delux_bank_icon', '');
+            $this->has_fields         = true;
+            $this->method_title       = __('DELUX Dynamic Bank Transfer', 'delux-gateway');
+            $this->method_description = __('Allows customers to pay via country-specific bank accounts with manual admin verification.', 'delux-gateway');
+
+            $this->init_form_fields();
+            $this->init_settings();
+
+            $this->title       = $this->get_option('title', 'Direct Bank Wire Transfer');
+            $this->description = $this->get_option('description', 'Pay via local bank wire. Orders held in Pending Verification status.');
+
+            add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+            add_action('woocommerce_thankyou_' . $this->id, array($this, 'thankyou_page'));
+        }
+
+        public function init_form_fields() {
+            $this->form_fields = array(
+                'enabled' => array(
+                    'title'   => __('Enable/Disable', 'delux-gateway'),
+                    'type'    => 'checkbox',
+                    'label'   => __('Enable DELUX Bank Gateway', 'delux-gateway'),
+                    'default' => 'yes'
+                ),
+                'title' => array(
+                    'title'       => __('Title', 'delux-gateway'),
+                    'type'        => 'text',
+                    'default'     => 'Direct Bank Wire Transfer',
+                    'description' => __('Payment method title shown during checkout.', 'delux-gateway'),
+                )
+            );
+        }
+
+        public function payment_fields() {
+            echo '<div class="delux-bank-payment-box p-4 border border-gold">';
+            echo '<p class="text-xs mb-3">' . esc_html($this->description) . '</p>';
+            
+            // Dynamic Country & Bank Selector Fields
+            $bank_data = get_option('delux_bank_accounts_data', array());
+            
+            echo '<label class="block text-xs font-bold uppercase">Select Country:</label>';
+            echo '<select id="delux_checkout_country" name="delux_country" class="w-full p-2 border mb-3">';
+            foreach ($bank_data as $country => $banks) {
+                echo '<option value="' . esc_attr($country) . '">' . esc_html($country) . '</option>';
+            }
+            echo '</select>';
+
+            echo '<label class="block text-xs font-bold uppercase">Transaction / Wire Reference #:</label>';
+            echo '<input type="text" name="delux_bank_reference" placeholder="TRX-9823410" class="w-full p-2 border" required>';
+            echo '</div>';
+        }
+
+        public function process_payment($order_id) {
+            $order = wc_get_order($order_id);
+
+            // Capture transaction reference
+            if (!empty($_POST['delux_bank_reference'])) {
+                $ref = sanitize_text_field($_POST['delux_bank_reference']);
+                $order->update_meta_data('_delux_payment_reference', $ref);
+            }
+
+            // Mark order status as On-Hold / Pending Verification
+            $order->update_status('on-hold', __('Awaiting bank transfer verification from DELUX Finance.', 'delux-gateway'));
+            WC()->cart->empty_cart();
+
+            return array(
+                'result'   => 'success',
+                'redirect' => $this->get_return_url($order)
+            );
+        }
+
+        public function thankyou_page($order_id) {
+            echo '<div class="delux-thankyou-box p-6 bg-cream border border-gold text-center">';
+            echo '<h3 class="font-serif text-2xl font-bold">Order Received — Pending Verification</h3>';
+            echo '<p class="text-xs mt-2">Thank you for choosing DELUX. Your transaction reference has been logged.</p>';
+            echo '</div>';
+        }
+    }
+}
+
+// Register Gateway
+add_filter('woocommerce_payment_gateways', function($gateways) {
+    $gateways[] = 'WC_Gateway_Delux_Bank';
+    return $gateways;
+});
+`
+            },
+            'theme-functions': {
+                path: '/wp-content/themes/delux-child/functions.php',
+                code: `<?php
+/**
+ * DELUX Luxury Child Theme Functions
+ */
+
+if (!defined('ABSPATH')) exit;
+
+// Enqueue Parent & Child Custom Luxury Styles
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('delux-google-fonts', 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap', array(), null);
+    wp_enqueue_style('delux-luxury-style', get_stylesheet_directory_uri() . '/style.css', array(), '1.0.0');
+});
+
+// Register Custom Fragrance Note Meta Boxes for WooCommerce Products
+add_action('woocommerce_product_options_general_product_data', function() {
+    echo '<div class="options_group">';
+    woocommerce_wp_text_input(array(
+        'id'          => '_delux_notes_top',
+        'label'       => __('Top Notes', 'delux'),
+        'placeholder' => 'e.g., Bergamot, Saffron'
+    ));
+    woocommerce_wp_text_input(array(
+        'id'          => '_delux_notes_heart',
+        'label'       => __('Heart Notes', 'delux'),
+        'placeholder' => 'e.g., Damascus Rose, Amber'
+    ));
+    woocommerce_wp_text_input(array(
+        'id'          => '_delux_notes_base',
+        'label'       => __('Base Notes', 'delux'),
+        'placeholder' => 'e.g., Cambodian Oud, Musk'
+    ));
+    echo '</div>';
+});
+
+// Save Product Meta
+add_action('woocommerce_process_product_meta', function($post_id) {
+    if (isset($_POST['_delux_notes_top'])) {
+        update_post_meta($post_id, '_delux_notes_top', sanitize_text_field($_POST['_delux_notes_top']));
+    }
+    if (isset($_POST['_delux_notes_heart'])) {
+        update_post_meta($post_id, '_delux_notes_heart', sanitize_text_field($_POST['_delux_notes_heart']));
+    }
+    if (isset($_POST['_delux_notes_base'])) {
+        update_post_meta($post_id, '_delux_notes_base', sanitize_text_field($_POST['_delux_notes_base']));
+    }
+});
+`
+            },
+            'theme-style': {
+                path: '/wp-content/themes/delux-child/style.css',
+                code: `/*
+Theme Name: DELUX Parfums Child
+Theme URI: https://deluxparfums.com
+Description: Ultra-luxury bespoke WooCommerce theme designed for DELUX Parfums.
+Author: House of DELUX
+Version: 1.0.0
+Template: storefront
+*/
+
+/* GLOBAL LUXURY COLORS */
+:root {
+    --delux-ivory: #FAF8F5;
+    --delux-cream: #F4F0EA;
+    --delux-obsidian: #111111;
+    --delux-gold: #D4AF37;
+    --delux-gold-dark: #AA820A;
+    --delux-border: rgba(212, 175, 55, 0.25);
+}
+
+body {
+    background-color: var(--delux-ivory) !important;
+    color: var(--delux-obsidian) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+h1, h2, h3, h4, .site-title {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif !important;
+}
+
+/* CUSTOM BUTTONS */
+.button.alt, .single_add_to_cart_button {
+    background: linear-gradient(135deg, #C5A059 0%, #D4AF37 50%, #AA820A 100%) !important;
+    color: #111 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.15em !important;
+    text-transform: uppercase !important;
+    border-radius: 0px !important;
+    border: none !important;
+}
+`
+            },
+            'sample-data': {
+                path: '/wp-content/plugins/delux-bank-payment-gateway/delux-sample-data.php',
+                code: `<?php
+/**
+ * DELUX Demo Products Auto-Importer Script
+ * Execute via WP-CLI or temporary admin trigger to import demo products.
+ */
+
+if (!defined('ABSPATH')) exit;
+
+function delux_import_sample_perfumes() {
+    $demo_products = array(
+        array(
+            'name' => 'DELUX Noir',
+            'price' => '28500',
+            'category' => 'Oud',
+            'top' => 'Bergamot, Saffron',
+            'heart' => 'Damascus Rose, Amber',
+            'base' => 'Cambodian Oud, Musk'
+        ),
+        array(
+            'name' => 'DELUX Oud Royal',
+            'price' => '34000',
+            'category' => 'Oud',
+            'top' => 'Cardamom, Nutmeg',
+            'heart' => 'Smoky Leather, Patchouli',
+            'base' => 'Royal Assam Oud, Sandalwood'
+        )
+    );
+
+    foreach ($demo_products as $p) {
+        $post_id = wp_insert_post(array(
+            'post_title'   => $p['name'],
+            'post_status'  => 'publish',
+            'post_type'    => 'product',
+        ));
+
+        if ($post_id) {
+            update_post_meta($post_id, '_price', $p['price']);
+            update_post_meta($post_id, '_regular_price', $p['price']);
+            update_post_meta($post_id, '_delux_notes_top', $p['top']);
+            update_post_meta($post_id, '_delux_notes_heart', $p['heart']);
+            update_post_meta($post_id, '_delux_notes_base', $p['base']);
+        }
+    }
+}
+`
+            }
+        };
+
+        let currentActiveCodeKey = 'plugin-main';
+
+        function showCodeFile(fileKey) {
+            const f = CODE_FILES[fileKey];
+            if (!f) return;
+            currentActiveCodeKey = fileKey;
+
+            document.getElementById('code-file-path').innerText = f.path;
+            document.getElementById('code-display-area').textContent = f.code.trim();
+
+            ['plugin-main', 'theme-functions', 'theme-style', 'sample-data'].forEach(k => {
+                const btn = document.getElementById(`btn-file-${k}`);
+                if (btn) {
+                    if (k === fileKey) {
+                        btn.className = "w-full text-left px-3.5 py-2.5 rounded text-xs font-mono bg-delux-gold text-delux-obsidian font-bold shadow";
+                    } else {
+                        btn.className = "w-full text-left px-3.5 py-2.5 rounded text-xs font-mono text-gray-300 hover:bg-white/10";
+                    }
+                }
+            });
+        }
+
+        function copyActiveCode() {
+            const f = CODE_FILES[currentActiveCodeKey];
+            if (!f) return;
+            navigator.clipboard.writeText(f.code.trim()).then(() => {
+                alert(`Code for ${f.path} copied to clipboard!`);
+            });
+        }
+
+        /* -------------------------------------------------------------
+           8. INITIALIZATION ON WINDOW LOAD
+        ------------------------------------------------------------- */
+        window.onload = function() {
+            renderProducts();
+            renderAdminBanksTable();
+            updateAdminOrdersTable();
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
